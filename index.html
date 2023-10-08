@@ -186,6 +186,269 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0Divide-Conquer-and-Combine-Hierarchical-Feature-Fusion-Network-with-Local-and-Global-Perspectives-for-Multimodal-Affective-Computing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Taylor">
+      <meta itemprop="description" content="I want auroras and sad prose">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome Taylor">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/10/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0Divide-Conquer-and-Combine-Hierarchical-Feature-Fusion-Network-with-Local-and-Global-Perspectives-for-Multimodal-Affective-Computing/" class="post-title-link" itemprop="url">论文阅读笔记Divide, Conquer and Combine Hierarchical Feature Fusion Network with Local and Global Perspectives for Multimodal Affective Computing</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-10-08 17:12:42 / 修改时间：17:14:08" itemprop="dateCreated datePublished" datetime="2023-10-08T17:12:42+08:00">2023-10-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>方法的核心正如题目所说，设计了一个分层的融合网络，去学习局部和全局的信息，并且作者把这个流程定为了三个阶段：分治合——Divide，Conquer，Combine。</p>
+<p>总体框架图如下：文本、图像、语音各自提取特征，在Divide阶段加入了一个滑动窗口，相当于把三个模态的特征进行了“切割”；再对切割后的小块局部特征进行外积操作（跟TFN模型一样的思想），外积就是在融合局部特征，是Conquer阶段；最后在Combine阶段设计了ABS-LSTM，用于提取全局特征。</p>
+<p><img src="/images/image-20231007190803453.png" alt="image-20231007190803453"></p>
+<p>接下来具体讲一下模型部分的某些细节，顺便讲一下论文提出的ABS-LSTM。</p>
+<p>之所以ABS-LSTM能提取全局特征，是因为他特别注意前t个时间步的交互和信息，在当前输入的情况下，对前t个时间步给予权重得分。</p>
+<p>第<code>L</code>步状态的cell和states计算如下：</p>
+<p><img src="/images/image-20231007193954999.png" alt="image-20231007193954999"></p>
+<p>接着就是LSTM的计算公式：</p>
+<p><img src="/images/image-20231007194913954.png" alt="image-20231007194913954"></p>
+<p>与传统的LSTM相比，h<del>l</del>和c<del>l</del>替换掉了h<del>l-1</del>和c<del>l-1</del>，传统的LSTM的对之前信息的融入通过上一步的h<del>l-1</del>和c张量，但ABS-LSTM对以前信息直接focus在前t个时间状态中，这样当前步对它们的关注更多。</p>
+<p>同时为了防止之前的信息被稀释掉，在LSTM的hidden states计算中加入了Attention机制GIA：</p>
+<p><img src="/images/image-20231007202145251.png" alt="image-20231007202145251"></p>
+<p>w<del>h</del>和w<del>x</del>这两个参数蕴含了第l步隐藏向量和当前输入的重要性。所以在h<del>l</del>^a^的计算中，W<del>h2</del>w<del>h</del>作为权重，W<del>x2</del>w<del>x</del>作为bias，融入了这两个信息。</p>
+<p>结果：</p>
+<p><img src="/images/image-20231007204539523.png" alt="image-20231007204539523"></p>
+<p>这还有一个小点，文章对滑动窗口的步长s和大小d进行了分析，发现当s大于d，也就是当有一些模态特征在融合阶段被遗留下来的时候，效果并没有很大的变化，这可以推测出模态特征有冗余的部分。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0UniMSE-Towards-Unified-Multimodal-Sentiment-Analysis-and-Emotion-Recognition/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Taylor">
+      <meta itemprop="description" content="I want auroras and sad prose">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome Taylor">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/10/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0UniMSE-Towards-Unified-Multimodal-Sentiment-Analysis-and-Emotion-Recognition/" class="post-title-link" itemprop="url">论文阅读笔记UniMSE- Towards Unified Multimodal Sentiment Analysis and Emotion Recognition</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-10-07 10:50:07 / 修改时间：20:56:18" itemprop="dateCreated datePublished" datetime="2023-10-07T10:50:07+08:00">2023-10-07</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="UniMSE-Towards-Unified-Multimodal-Sentiment-Analysis-and-Emotion-Recognition"><a href="#UniMSE-Towards-Unified-Multimodal-Sentiment-Analysis-and-Emotion-Recognition" class="headerlink" title="UniMSE: Towards Unified Multimodal Sentiment Analysis and Emotion Recognition"></a>UniMSE: Towards Unified Multimodal Sentiment Analysis and Emotion Recognition</h2><p>发表出处：EMNLP 2022</p>
+<p><del>第一篇给老师汇报的论文，现在再写下笔记，有点把呕了的东西再吃下去的感觉:joy:</del></p>
+<p>笔记从下面五部分讲解：</p>
+<h3 id="Research-Background"><a href="#Research-Background" class="headerlink" title="Research Background"></a>Research Background</h3><p><img src="/images/image-20231007163658519.png" alt="image-20231007163658519"></p>
+<ul>
+<li>从心理认知角度来看，情感分析MSA和情绪识别ERC的人类表达方式是一样的，所以这两个任务在直觉上可以进行关联和互补，但是现研究针对这两个任务的研究一般都是独立的，没有把他们关联起来。</li>
+<li>情感Sentiment和情绪Emotion的定义：前者持续时间长，预测极性标签（positive，1.6）；后者持续时间短，预测情绪类别（joy）</li>
+<li>&#x3D;&#x3D;Figure 1这张图初步展示了情感和情绪可以共享一个统一的表示空间，具体来说是通过具有相同的情感标签的样例的相似度来确定统一的一个lable&#x3D;&#x3D;</li>
+</ul>
+<h3 id="Contributions"><a href="#Contributions" class="headerlink" title="Contributions"></a>Contributions</h3><p><img src="/images/image-20231007164203289.png" alt="image-20231007164203289"></p>
+<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><p>这部分的讲解可以分为五大部分：Method-Overall Architecture，Method-Task Formalization，Method-Pre-trained Modality Fusion(PMF) ，<strong>Method-Inter-modality Contrastive Learning</strong> ，Method- Grounding UL to MSA and ERC</p>
+<ol>
+<li><strong>Method-Overall Architecture</strong></li>
+</ol>
+<p><img src="/images/image-20231007164416156.png" alt="image-20231007164416156"></p>
+<p><img src="/images/image-20231007164437307.png" alt="image-20231007164437307"></p>
+<p>&#x3D;&#x3D;Figure 2有几个注意的点：训练集是都用到了MSA和ERC 的数据集，通过UL Lable集合起来。然后融合部分引进了对比学习，对比学习的过程就是以锚点为参照，在特征空间中将锚点和它的正样本拉得更近，将锚点和负样本推得更远。而在这个模型中具体来说就是以文本模态（小紫）为锚点，在同一个样例中三种模态让他们的表示相近（即pull close），不同的样例的三种模态push far，所以说这里的正样例有1个，负样例有n个&#x3D;&#x3D;</p>
+<ol start="2">
+<li><strong>Method-Task Formalization</strong></li>
+</ol>
+<p><img src="/images/image-20231007164806498.png" alt="image-20231007164806498"></p>
+<p>语音模态：用librosa 将原始声音输入处理成数值序列向量，提取梅尔谱图作为音频特征。</p>
+<p>视频模态：从每个片段中提取固定的T帧，并使用在VGGface 4和AFEW数据集上预训练(有监督)的effecientNet来获取视频特征。</p>
+<p><img src="/images/image-20231007164821984.png" alt="image-20231007164821984"></p>
+<p>&#x3D;&#x3D;这里要注意他为什么能将MSA和ERC样本按照情感极性分为积极、中性和消极样本集。（我当时困惑了好久，以为ERC的数据集的标签只有情绪类别，哪来的情感极性，但其实这里用到的ERC数据集是有情感极性的，MSA数据集没有情感标签。大概是这样，具体可以看看代码和数据集。</p>
+<ol start="3">
+<li><strong>Method-Pre-trained Modality Fusion(PMF)</strong></li>
+</ol>
+<p><img src="/images/image-20231007164854172.png" alt="image-20231007164854172"></p>
+<p>M<del>i</del>为经过LSTM后得到的模态表征</p>
+<ol start="4">
+<li><strong>Method-Inter-modality Contrastive Learning</strong></li>
+</ol>
+<p><img src="/images/image-20231007164908541.png" alt="image-20231007164908541"></p>
+<ol start="5">
+<li><strong>Method- Grounding UL to MSA and ERC</strong></li>
+</ol>
+<p><img src="/images/image-20231007164948129.png" alt="image-20231007164948129"></p>
+<h3 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h3><p><img src="/images/image-20231007165412671.png" alt="image-20231007165412671"></p>
+<p>后两个数据集用ACC\WF1</p>
+<p><img src="/images/image-20231007165435291.png" alt="image-20231007165435291"></p>
+<p>效果嘎嘎好</p>
+<p><img src="/images/image-20231007165449012.png" alt="image-20231007165449012"></p>
+<p><img src="/images/image-20231007165500944.png" alt="image-20231007165500944"></p>
+<h3 id="Conclusion-Limitations"><a href="#Conclusion-Limitations" class="headerlink" title="Conclusion&amp;Limitations"></a>Conclusion&amp;Limitations</h3><p><img src="/images/image-20231007165512816.png" alt="image-20231007165512816"></p>
+<p><img src="/images/image-20231007165523868.png" alt="image-20231007165523868"></p>
+<p>Limitation这里，样例相似度是通过计算文本模态的相似度得到的，没有用到其他模态，所以作者认为相似度这里还可以改进。</p>
+<p>启发：特征的融合也许还可以改进，即这部分，主要还是用到拼接</p>
+<p><img src="/images/image-20231007172822666.png" alt="image-20231007172822666"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/07/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Taylor">
+      <meta itemprop="description" content="I want auroras and sad prose">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome Taylor">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/10/07/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">实验室环境搭建</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-10-07 10:23:21 / 修改时间：10:46:21" itemprop="dateCreated datePublished" datetime="2023-10-07T10:23:21+08:00">2023-10-07</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>实验室配备了新的电脑，故此记录实验室环境的配置。</p>
+<h3 id="服务器连接"><a href="#服务器连接" class="headerlink" title="服务器连接"></a>服务器连接</h3><ol>
+<li>创建服务器账号，需要先生成公钥（命令行生成</li>
+<li>用mobaxterm连接服务器账号，填写好配置信息，连接成功<ul>
+<li>这里出现一个问题，当时生成公钥配置了密码，一直permission denied（应该是设置权限问题，找Administrator</li>
+</ul>
+</li>
+</ol>
+<h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p>Anaconda+VSCode</p>
+<p>选择原因：Anaconda内嵌了Python，而且可以管理环境；VSCode可以通过插件连接服务器（Pycharm要专业版收费:cry:</p>
+<p>找了几个教程手把手操作，还在Anaconda分别新建了Pytorch和Tensorflow环境（注意cpu和gpu版本）。但是忘记保存下来了&#x3D;&#x3D;</p>
+<h3 id="conda命令行"><a href="#conda命令行" class="headerlink" title="conda命令行"></a>conda命令行</h3><p><strong>创建虚拟环境</strong>：yida_cv是我虚拟环境的名字，你取什么名字都OK，最好能够标记好环境。<br><code>conda create -n yida_cv python=3.6 </code></p>
+<p><strong>激活&#x2F;切换虚拟环境</strong><br><code>conda activate yida_cv</code></p>
+<p><strong>退出并进入base环境</strong><br><code>conda deactivate </code></p>
+<p><strong>查看已有的虚拟环境</strong><br><code>conda env list</code></p>
+<p><strong>删除虚拟环境</strong><br><code>conda remove -n yida_cv --all</code></p>
+<hr>
+<p>参考更多命令行：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43312117/article/details/123431626">https://blog.csdn.net/weixin_43312117/article/details/123431626</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/05/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -551,7 +814,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
