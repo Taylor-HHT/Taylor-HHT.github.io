@@ -390,11 +390,9 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Taylor</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
-  </div>
 
 <div class="theme-info">
-  <div class="powered-by"></div>
+  <!-- <div class="powered-by"></div> -->
   <span class="post-count">The whole site has a total of 2.3k words</span>
   <span class="separator">|</span>
 </div>
@@ -403,14 +401,15 @@
     <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
     <span id="busuanzi_container_site_pv">Total <span id="busuanzi_value_site_pv"></span> visits</span>
-    <span class="post-meta-divider">|</span>
+    <!-- <span class="post-meta-divider">.</span> -->
+    <span class="separator">|</span>
     <span id="busuanzi_container_site_uv">Total <span id="busuanzi_value_site_uv"></span> visitors</span>
 <!-- 不蒜子计数初始值纠正 -->
 <script>
 $(document).ready(function() {
 
     var int = setInterval(fixCount, 50);  // 50ms周期检测函数
-    var countOffset = 20000;  // 初始化首次数据
+    var countOffset = 5000;  // 初始化首次数据
 
     function fixCount() {            
        if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
