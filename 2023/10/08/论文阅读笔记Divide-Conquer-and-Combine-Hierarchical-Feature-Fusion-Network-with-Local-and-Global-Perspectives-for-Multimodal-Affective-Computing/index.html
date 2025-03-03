@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="方法的核心正如题目所说，设计了一个分层的融合网络，去学习局部和全局的信息，并且作者把这个流程定为了三个阶段：分治合——Divide，Conquer，Combine。 总体框架图如下：文本、图像、语音各自提取特征，在Divide阶段加入了一个滑动窗口，相当于把三个模态的特征进行了“切割”；再对切割后的小块局部特征进行外积操作（跟TFN模型一样的思想），外积就是在融合局部特征，是Conquer阶段；最">
+  <meta name="description" content="方法的核心正如题目所说，设计了一个分层的融合网络，去学习局部和全局的信息，并且作者把这个流程定为了三个阶段：分治合——Divide，Conquer，Combine。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="论文阅读笔记Divide, Conquer and Combine Hierarchical Feature Fusion Network with Local and Global Perspectives for Multimodal Affective Computing">
+<meta property="og:title" content="论文阅读笔记：Divide, Conquer and Combine Hierarchical Feature Fusion Network with Local and Global Perspectives for Multimodal Affective Computing">
 <meta property="og:url" content="http://example.com/2023/10/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0Divide-Conquer-and-Combine-Hierarchical-Feature-Fusion-Network-with-Local-and-Global-Perspectives-for-Multimodal-Affective-Computing/index.html">
 <meta property="og:site_name" content="Welcome Taylor">
-<meta property="og:description" content="方法的核心正如题目所说，设计了一个分层的融合网络，去学习局部和全局的信息，并且作者把这个流程定为了三个阶段：分治合——Divide，Conquer，Combine。 总体框架图如下：文本、图像、语音各自提取特征，在Divide阶段加入了一个滑动窗口，相当于把三个模态的特征进行了“切割”；再对切割后的小块局部特征进行外积操作（跟TFN模型一样的思想），外积就是在融合局部特征，是Conquer阶段；最">
+<meta property="og:description" content="方法的核心正如题目所说，设计了一个分层的融合网络，去学习局部和全局的信息，并且作者把这个流程定为了三个阶段：分治合——Divide，Conquer，Combine。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/image-20231007190803453.png">
 <meta property="og:image" content="http://example.com/images/image-20231007193954999.png">
@@ -33,8 +33,10 @@
 <meta property="og:image" content="http://example.com/images/image-20231007202145251.png">
 <meta property="og:image" content="http://example.com/images/image-20231007204539523.png">
 <meta property="article:published_time" content="2023-10-08T09:12:42.000Z">
-<meta property="article:modified_time" content="2023-10-08T09:14:08.772Z">
+<meta property="article:modified_time" content="2025-03-03T13:05:20.743Z">
 <meta property="article:author" content="Taylor">
+<meta property="article:tag" content="Paper Reading">
+<meta property="article:tag" content="MSA">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/images/image-20231007190803453.png">
 
@@ -51,7 +53,7 @@
   };
 </script>
 
-  <title>论文阅读笔记Divide, Conquer and Combine Hierarchical Feature Fusion Network with Local and Global Perspectives for Multimodal Affective Computing | Welcome Taylor</title>
+  <title>论文阅读笔记：Divide, Conquer and Combine Hierarchical Feature Fusion Network with Local and Global Perspectives for Multimodal Affective Computing | Welcome Taylor</title>
   
 
 
@@ -125,6 +127,11 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
         <li class="menu-item menu-item-categories">
 
     <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
@@ -133,11 +140,6 @@
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
-
-  </li>
-        <li class="menu-item menu-item-schedule">
-
-    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,7 +210,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          论文阅读笔记Divide, Conquer and Combine Hierarchical Feature Fusion Network with Local and Global Perspectives for Multimodal Affective Computing
+          论文阅读笔记：Divide, Conquer and Combine Hierarchical Feature Fusion Network with Local and Global Perspectives for Multimodal Affective Computing
         </h1>
 
         <div class="post-meta">
@@ -219,9 +221,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-10-08 17:12:42 / Modified: 17:14:08" itemprop="dateCreated datePublished" datetime="2023-10-08T17:12:42+08:00">2023-10-08</time>
+              <time title="Created: 2023-10-08 17:12:42" itemprop="dateCreated datePublished" datetime="2023-10-08T17:12:42+08:00">2023-10-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-03-03 21:05:20" itemprop="dateModified" datetime="2025-03-03T21:05:20+08:00">2025-03-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
+                </span>
             </span>
 
           
@@ -243,6 +260,7 @@
 
       
         <p>方法的核心正如题目所说，设计了一个分层的融合网络，去学习局部和全局的信息，并且作者把这个流程定为了三个阶段：分治合——Divide，Conquer，Combine。</p>
+<span id="more"></span>
 <p>总体框架图如下：文本、图像、语音各自提取特征，在Divide阶段加入了一个滑动窗口，相当于把三个模态的特征进行了“切割”；再对切割后的小块局部特征进行外积操作（跟TFN模型一样的思想），外积就是在融合局部特征，是Conquer阶段；最后在Combine阶段设计了ABS-LSTM，用于提取全局特征。</p>
 <p><img src="/images/image-20231007190803453.png" alt="image-20231007190803453"></p>
 <p>接下来具体讲一下模型部分的某些细节，顺便讲一下论文提出的ABS-LSTM。</p>
@@ -287,6 +305,10 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Paper-Reading/" rel="tag"># Paper Reading</a>
+              <a href="/tags/MSA/" rel="tag"># MSA</a>
+          </div>
 
         
 
@@ -294,8 +316,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/10/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0UniMSE-Towards-Unified-Multimodal-Sentiment-Analysis-and-Emotion-Recognition/" rel="prev" title="论文阅读笔记UniMSE- Towards Unified Multimodal Sentiment Analysis and Emotion Recognition">
-      <i class="fa fa-chevron-left"></i> 论文阅读笔记UniMSE- Towards Unified Multimodal Sentiment Analysis and Emotion Recognition
+    <a href="/2023/10/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0UniMSE-Towards-Unified-Multimodal-Sentiment-Analysis-and-Emotion-Recognition/" rel="prev" title="论文阅读笔记：UniMSE:
+Towards Unified Multimodal Sentiment Analysis and Emotion Recognition
+">
+      <i class="fa fa-chevron-left"></i> 论文阅读笔记：UniMSE:
+Towards Unified Multimodal Sentiment Analysis and Emotion Recognition
+
     </a></div>
       <div class="post-nav-item"></div>
     </div>
@@ -374,6 +400,18 @@
           <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
