@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="这一章介绍四篇MSA中经典的结合元学习方法的文章~本系列共四章：多视图、对抗学习、元学习、对比学习。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="调研MSA中的方法（三）：元学习">
+<meta property="og:url" content="http://example.com/2025/03/03/%E8%B0%83%E7%A0%94MSA%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%85%83%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Welcome Taylor">
+<meta property="og:description" content="这一章介绍四篇MSA中经典的结合元学习方法的文章~本系列共四章：多视图、对抗学习、元学习、对比学习。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241011211004154.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241011211253416.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241011211441814.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20240930112043696-1728651971309.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012102129511.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012101742141.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012101809280.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012101926713.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012102020083.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012102625880.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012103210831.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012103541059.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012103600142.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012103620308.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012103641734.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012103712230.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012103803300.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012103910297.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012103936424.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012104013814.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012104028870.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012104059546.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012104300919.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012104308536.png">
+<meta property="article:published_time" content="2025-03-03T13:58:00.000Z">
+<meta property="article:modified_time" content="2025-03-03T14:00:39.923Z">
+<meta property="article:author" content="Taylor">
+<meta property="article:tag" content="MSA">
+<meta property="article:tag" content="元学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="f:/files/myBlog/images/image-20241011211004154.png">
+
+<link rel="canonical" href="http://example.com/2025/03/03/%E8%B0%83%E7%A0%94MSA%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%85%83%E5%AD%A6%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>调研MSA中的方法（三）：元学习 | Welcome Taylor</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/rss2.xml" title="Welcome Taylor" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Welcome Taylor</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/03/%E8%B0%83%E7%A0%94MSA%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%85%83%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Taylor">
+      <meta itemprop="description" content="I want auroras and sad prose.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome Taylor">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          调研MSA中的方法（三）：元学习
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-03-03 21:58:00 / Modified: 22:00:39" itemprop="dateCreated datePublished" datetime="2025-03-03T21:58:00+08:00">2025-03-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这一章介绍四篇MSA中经典的结合元学习方法的文章~本系列共四章：多视图、对抗学习、元学习、对比学习。</p>
+<span id="more"></span>
+
+
+<h4 id="3-meta-learning"><a href="#3-meta-learning" class="headerlink" title="3. meta-learning"></a>3. meta-learning</h4><h5 id="（1）Meta-Learn-Unimodal-Signals-with-Weak-Supervision-for-Multimodal-Sentiment-Analysis-（arXiv-2024）"><a href="#（1）Meta-Learn-Unimodal-Signals-with-Weak-Supervision-for-Multimodal-Sentiment-Analysis-（arXiv-2024）" class="headerlink" title="（1）Meta-Learn Unimodal Signals with Weak Supervision for Multimodal Sentiment Analysis （arXiv 2024）"></a>（1）Meta-Learn Unimodal Signals with Weak Supervision for Multimodal Sentiment Analysis （arXiv 2024）</h5><p>&#x3D;&#x3D;标签：&#x3D;&#x3D;元学习，单模态标签学习，对比学习</p>
+<p>&#x3D;&#x3D;解决的问题：&#x3D;&#x3D;noisy label problem: 单模态表征学习如果用多模态的标签训练，会影响单模态的学习</p>
+<p>&#x3D;&#x3D;主要工作：&#x3D;&#x3D;The first to introduce metalearning  into MSA for learning accurate unimodal labels</p>
+<p>主要思想是通过弱监督学习单模态标签，以改进多模态情感分析。提出框架Meta Uni-label Generation, MUG。MUG框架包括三个主要阶段：<strong>单模态网络的构建、多模态框架的预训练和元学习策略的应用</strong>。</p>
+<p>①预训练：设计了基于对比学习的投影模块（Contrastive-based Projection Module, CPM），以缩小单模态和多模态表示之间的差距。具体来说，将多模态表示投影到单模态嵌入空间，并使用投影的多模态嵌入训练单模态预测器。通过对比学习提高单模态和多模态表示之间的互信息，减少它们之间的分布差距。预训练阶段图如下：</p>
+<p><img src="F:/files/myBlog/images/image-20241011211004154.png" alt="image-20241011211004154"></p>
+<p><img src="F:/files/myBlog/images/image-20241011211253416.png" alt="image-20241011211253416"></p>
+<p>②元单标签校正网络（Meta Uni-label Correction Network, MUCN）的元学习过程：包括单模态去噪任务和多模态去噪任务。</p>
+<ul>
+<li>在元训练阶段（unimodal denoising task），训练MUCN以去噪手动损坏的多模态标签，并恢复原始多模态标签。通过高斯噪声防止MUCN学习身份映射，并提供模型学习最优单模态标签的能力。</li>
+<li>在元测试阶段（multimodal denoising task），利用干净的多模态标签和表示指导MUCN的学习。通过估计MUCN是否能恢复干净的多模态标签来评估其有效性。</li>
+<li>采用双层优化策略以提高MUCN的训练效果：如果MUCN在单模态去噪任务的参数在多模态去噪任务上表现的好，那就用原的这个参数来更新；如果表现不好，那就得加上利用多模态去噪任务的损失来进行参数更新。</li>
+<li>单模态去噪和多模态去噪两个任务的区别，本质都是要恢复加了噪声的多模态标签y：<ul>
+<li>单模态去噪：输入是$x_m$和加了高斯的多模态真实标签y，想要输出尽可能靠近真实标签y</li>
+<li>多模态去噪：输入是利用统一多模态表示x映射后的 $x_m\prime$ 和加了高斯的单模态预测标签 $\hat{y}_m\prime$ （利用了预训练阶段的Projection Layer和Unimodal Predictor），想要输出尽可能靠近真实标签 y。</li>
+</ul>
+</li>
+</ul>
+<p><img src="F:/files/myBlog/images/image-20241011211441814.png" alt="image-20241011211441814"></p>
+<p>③多任务训练：联合训练单模态和多模态学习任务，以提取更具辨别力的单模态特征。具体是单模态任务训练使用元学习阶段生成的校正单模态标签进行单模态任务训练；多模态任务训练使用多模态标签指导多模态任务学习。</p>
+<p>④总结：通过这种方式，MUG能够最大限度地利用现有的多模态信息，提取更具辨别力和表达力的单模态特征，从而提高多模态情感分析的性能。</p>
+<p>&#x3D;&#x3D;可以改进的地方：&#x3D;&#x3D;</p>
+<p>&#x3D;&#x3D;任务：&#x3D;&#x3D;MSA</p>
+<p>&#x3D;&#x3D;数据集：&#x3D;&#x3D;CMU-MOSI；CMU-MOSEI；SIMS（中文数据集）</p>
+<p>&#x3D;&#x3D;结果：&#x3D;&#x3D;</p>
+<p><img src="F:/files/myBlog/images/image-20240930112043696-1728651971309.png" alt="image-20240930112043696"></p>
+<p>&#x3D;&#x3D;代码：&#x3D;&#x3D;无</p>
+<h5 id="（2）Learning-to-Learn-Better-Unimodal-Representations-via-Adaptive-Multimodal-Meta-Learning-TAC2023"><a href="#（2）Learning-to-Learn-Better-Unimodal-Representations-via-Adaptive-Multimodal-Meta-Learning-TAC2023" class="headerlink" title="（2）Learning to Learn Better Unimodal Representations via Adaptive Multimodal Meta-Learning(TAC2023)"></a>（2）Learning to Learn Better Unimodal Representations via Adaptive Multimodal Meta-Learning(TAC2023)</h5><p>&#x3D;&#x3D;标签：&#x3D;&#x3D;元学习</p>
+<p>&#x3D;&#x3D;解决的问题：&#x3D;&#x3D;解决以往多模态融合只能获得次优的单模态表征；缩小各模态之间的分布差异</p>
+<p>&#x3D;&#x3D;主要工作：&#x3D;&#x3D;</p>
+<p><img src="F:/files/myBlog/images/image-20241012102129511.png" alt="image-20241012102129511"></p>
+<p><strong>①Distribution Transformation Layer（DTL）：</strong>减小模态特征分布之间的间隙，促进多模态融合。我们首先将单模态表示的分布转换为高斯分布，然后将转换后的分布在不同模态之间进行匹配。单模态表示转为高斯分布过程采用参数化技巧，以避免梯度计算过程中的随机性：</p>
+<p><img src="F:/files/myBlog/images/image-20241012101742141.png" alt="image-20241012101742141"></p>
+<p>通过KL散度 Loss来缩小gap：</p>
+<p><img src="F:/files/myBlog/images/image-20241012101809280.png" alt="image-20241012101809280"></p>
+<p><strong>②Adaptive Multimodal Meta-Learning：</strong></p>
+<p>a. 元训练阶段（“Inner-Update Stage”）：为每种模态分配特定的元学习优化程序，从而获得每种模态的最佳的单模态表征，并将其用于多模态融合。与之前读的meta learning学习权重不同的是，这里学习的是学习率，控制更新方向和速度（归根到底还是Loss的设置和训练的方式和阶段不一样）：</p>
+<p><img src="F:/files/myBlog/images/image-20241012101926713.png" alt="image-20241012101926713"></p>
+<p>单模态表征学习网络的参数在inner-update and outer-update stages被更新两次。</p>
+<p>b.元测试阶段（“Outer-Update Stage”）：</p>
+<p><img src="F:/files/myBlog/images/image-20241012102020083.png" alt="image-20241012102020083"></p>
+<p>这里的元学习指多模态任务信息指导单模态网络的更新。与传统meta learning任务不同的是，传统meta的元训练和元测试阶段数据不同，但setting相同。而这篇文章是数据相同，setting不同。我们的目标是将在元训练(单模态)任务中优化的unimodal learners适应到元测试(多模态)任务中，其中两个任务的目标是不同的。</p>
+<p>&#x3D;&#x3D;可以改进的地方：&#x3D;&#x3D;</p>
+<p>&#x3D;&#x3D;任务：&#x3D;&#x3D;MSA</p>
+<p>&#x3D;&#x3D;数据集：&#x3D;&#x3D;CMU-MOSEI and CMUMOSI</p>
+<p>&#x3D;&#x3D;结果：&#x3D;&#x3D;不高</p>
+<p><img src="F:/files/myBlog/images/image-20241012102625880.png" alt="image-20241012102625880"></p>
+<p>&#x3D;&#x3D;代码：&#x3D;&#x3D;无</p>
+<h5 id="（3）Crossmodal-Translation-based-Meta-Weight-Adaption-for-Robust-Image-Text-Sentiment-Analysis-ACM-MM2021"><a href="#（3）Crossmodal-Translation-based-Meta-Weight-Adaption-for-Robust-Image-Text-Sentiment-Analysis-ACM-MM2021" class="headerlink" title="（3）Crossmodal Translation based Meta Weight Adaption for Robust Image-Text Sentiment Analysis (ACM MM2021)"></a>（3）Crossmodal Translation based Meta Weight Adaption for Robust Image-Text Sentiment Analysis (ACM MM2021)</h5><p>&#x3D;&#x3D;标签：&#x3D;&#x3D;翻译网络，元学习</p>
+<p>&#x3D;&#x3D;解决的问题：&#x3D;&#x3D;模态独特性的重要性，missing modality</p>
+<p>&#x3D;&#x3D;主要工作：&#x3D;&#x3D;</p>
+<p>①跨模态翻译网络：用来在图像和文本模态之间进行信息转换。比如说，通过翻译网络将图像模态的信息转换为文本模态的表示。这个翻译网络的目标是捕捉模态间共享的情感信息，特别是在一种模态缺失的情况下，能够利用另一种模态的翻译表示来替代缺失模态的数据。</p>
+<p><img src="F:/files/myBlog/images/image-20241012103210831.png" alt="image-20241012103210831"></p>
+<p>在原始数据集手动给一些样本标注单模态的标签，标记为$D_{meta}$，剩下的数据集是$D_{train}$。</p>
+<p>②普通优化pseudo-updating of the backbone network $\theta$：**在第$\tau$步，使用$D_{train}$，首先前向计算backbone网络$\Phi_b(\cdot;\theta^{(\tau)})$，网络输入输出如下：</p>
+<p><img src="F:/files/myBlog/images/image-20241012103541059.png" alt="image-20241012103541059"></p>
+<p>然后还要计算unimodal weight generation network ，网络输出的是每个样本的单模态权重：</p>
+<p><img src="F:/files/myBlog/images/image-20241012103600142.png" alt="image-20241012103600142"></p>
+<p>这一阶段的训练目标$L_1$如下：</p>
+<p><img src="F:/files/myBlog/images/image-20241012103620308.png" alt="image-20241012103620308"></p>
+<p>这里的loss，第一部分$L_c$是交叉熵，第二部分Σ项是权重比例乘以交叉熵项，与第一项交叉熵比较真实标签y和模型预测样本标签 $\hat{y}$ 不同的是，这一项比较的是真实标签y和单模态标签$\hat{y}_u$，也就是说这里的单模态标签会尽可能往总的标签预测，用统一的多模态label来监督单模态情感分析网络的学习，这样做的问题是会导致独立的单模态信息的扰动。最后一项 $L_r$ 。最后一项$L_r$是crossmodal translation网络的Loss值。</p>
+<p>用这个$L_1$来更新旧网络参数$\theta^{(\tau)}$，得到新网络参数$\hat{\theta}^{(\tau)}$：</p>
+<p><img src="F:/files/myBlog/images/image-20241012103641734.png" alt="image-20241012103641734"></p>
+<p>总的流程图如下：</p>
+<p><img src="F:/files/myBlog/images/image-20241012103712230.png" alt="image-20241012103712230"></p>
+<p>可以看到，前向计算涉及backbone和UWG网络，后向更新参数是作用在backbone。</p>
+<p>③元学习指导refining the unimodal weight generation network $\omega$：这一阶段主要的目标是给UWG网络的更新提供指导。因为前面第一阶段是用统一的多模态label来监督单模态情感分析网络的学习<strong>（bad）</strong>，这里引用了元学习的指导，使用人工标注好的单模态标签数据集$D_{meta}$。</p>
+<p>训练目标如下：<img src="F:/files/myBlog/images/image-20241012103803300.png" alt="image-20241012103803300"></p>
+<p>这里第二项Σ就是用的真实单模态标签$y_u$（人工标注）和预测标签$\hat{y_u}$。<strong>（good）</strong>不仅如此，这个Loss与第一阶段更新相比，没有translation network的$L_r$。</p>
+<p>参数更新UWG网络：<img src="F:/files/myBlog/images/image-20241012103910297.png" alt="image-20241012103910297"></p>
+<p><img src="F:/files/myBlog/images/image-20241012103936424.png" alt="image-20241012103936424"></p>
+<p>可以看到，前向计算涉及backbone，后向更新参数是作用在UWG网络。</p>
+<p>④使用 更新的UWG网络 得到的 单模态权重 来更新backbone $\theta$：这一个阶段的训练目标如下：</p>
+<p> <img src="F:/files/myBlog/images/image-20241012104013814.png" alt="image-20241012104013814"></p>
+<p>与第二阶段相比，这里的Σ项多了第二个阶段更新后的权重。计算与第一个阶段的训练目标是一样的，这不过这一阶段经历了第二阶段的人工单模态标签的指导，$\hat{y}_u$会更准确一些。</p>
+<p>参数更新backbone：<img src="F:/files/myBlog/images/image-20241012104028870.png" alt="image-20241012104028870"></p>
+<p><img src="F:/files/myBlog/images/image-20241012104059546.png" alt="image-20241012104059546"></p>
+<p>可以看到，前向计算涉及backbone和UWG网络，后向更新参数是作用在backbone。</p>
+<p>&#x3D;&#x3D;可以改进的地方：&#x3D;&#x3D;①数据集可以从图文两模态拓展到视频三模态等，该文章模型的设计是需要单个模态的标签的，后续拓展的数据集中的单模态标签可以是自动生成的，应用范围可以更加广泛。②文章是用了跨模态翻译的方法处理模态缺失问题，之前有泛泛地了解到对抗学习也被用于处理模态缺失，对抗学习较于前者是侧重于生成更具逼真性的模态补全表示。具体来说，生成器负责生成缺失模态，判别器负责判断生成模态的真实性，通过对抗学习提升模态补全的质量。模型可以生成缺失模态的补全数据，从而提升模型的性能。具体模型有生成对抗网络（GAN）。③元学习在这篇文章的作用有些类似于之前看到的用多任务学习来辅助多模态情感分析任务，也是借助外部的信息（另一个任务或者另一些样本的信息）去辅助本身的任务。但两者对比，多任务学习更多是学习不同任务间共享的有效信息（因此要求不同任务之间是得有关联的），而本文提出的元学习策略倾向于捕获不同模态之间独有的信息，并且元学习更加轻量化，需要的样本数更少，还可以快速适应新任务。后续会调研一下，尝试将对抗学习与元学习结合，来进一步提高模型的稳健性。</p>
+<p>&#x3D;&#x3D;任务：&#x3D;&#x3D;image text sentiment analysis</p>
+<p>&#x3D;&#x3D;数据集：&#x3D;&#x3D;MVSA-Single and MVSA-Multiple，TumEmo</p>
+<p>&#x3D;&#x3D;结果：&#x3D;&#x3D;</p>
+<p><img src="F:/files/myBlog/images/image-20241012104300919.png" alt="image-20241012104300919"></p>
+<p><img src="F:/files/myBlog/images/image-20241012104308536.png" alt="image-20241012104308536"></p>
+<p>&#x3D;&#x3D;代码：&#x3D;&#x3D; <a target="_blank" rel="noopener" href="https://github.com/thuiar/CTMWA">https://github.com/thuiar/CTMWA</a></p>
+
+    </div>
+
+    
+    
+    
+
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MSA/" rel="tag"># MSA</a>
+              <a href="/tags/%E5%85%83%E5%AD%A6%E4%B9%A0/" rel="tag"># 元学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/03/03/%E8%B0%83%E7%A0%94MSA%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E5%AF%B9%E6%8A%97%E5%AD%A6%E4%B9%A0/" rel="prev" title="调研MSA中的方法（二）：对抗学习">
+      <i class="fa fa-chevron-left"></i> 调研MSA中的方法（二）：对抗学习
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/03/03/%E8%B0%83%E7%A0%94MSA%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/" rel="next" title="调研MSA中的方法（四）：对比学习">
+      调研MSA中的方法（四）：对比学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-meta-learning"><span class="nav-number">1.</span> <span class="nav-text">3. meta-learning</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%881%EF%BC%89Meta-Learn-Unimodal-Signals-with-Weak-Supervision-for-Multimodal-Sentiment-Analysis-%EF%BC%88arXiv-2024%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">（1）Meta-Learn Unimodal Signals with Weak Supervision for Multimodal Sentiment Analysis （arXiv 2024）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%882%EF%BC%89Learning-to-Learn-Better-Unimodal-Representations-via-Adaptive-Multimodal-Meta-Learning-TAC2023"><span class="nav-number">1.2.</span> <span class="nav-text">（2）Learning to Learn Better Unimodal Representations via Adaptive Multimodal Meta-Learning(TAC2023)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%883%EF%BC%89Crossmodal-Translation-based-Meta-Weight-Adaption-for-Robust-Image-Text-Sentiment-Analysis-ACM-MM2021"><span class="nav-number">1.3.</span> <span class="nav-text">（3）Crossmodal Translation based Meta Weight Adaption for Robust Image-Text Sentiment Analysis (ACM MM2021)</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Taylor"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Taylor</p>
+  <div class="site-description" itemprop="description">I want auroras and sad prose.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:hthuang0923@gmail.com" title="E-Mail → mailto:hthuang0923@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Taylor</span>
+</div>
+
+<div class="theme-info">
+  <!-- <div class="powered-by"></div> -->
+  <span class="post-count">The whole site has a total of 12.6k words</span>
+  <span class="separator">|</span>
+</div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">Total <span id="busuanzi_value_site_pv"></span> visits</span>
+    <!-- <span class="post-meta-divider">.</span> -->
+    <span class="separator">|</span>
+    <span id="busuanzi_container_site_uv">Total <span id="busuanzi_value_site_uv"></span> visitors</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 5000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

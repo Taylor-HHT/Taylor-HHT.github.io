@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="这一章介绍四篇MSA中经典的结合对比学习方法的文章，末尾附上这四章的小总结~本系列共四章：多视图、对抗学习、元学习、对比学习。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="调研MSA中的方法（四）：对比学习">
+<meta property="og:url" content="http://example.com/2025/03/03/%E8%B0%83%E7%A0%94MSA%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Welcome Taylor">
+<meta property="og:description" content="这一章介绍四篇MSA中经典的结合对比学习方法的文章，末尾附上这四章的小总结~本系列共四章：多视图、对抗学习、元学习、对比学习。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="f:/files/myBlog/images/1ff561b2894ddb418ae717d2b428e1d9.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241011155522619.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241011161442040.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241011162146497.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241011162737378.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20240928165118509-1728702396078-1728702401197.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012113714745.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012113921820.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012114140724.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012114225268.png">
+<meta property="og:image" content="f:/files/myBlog/images/image-20241012114240460.png">
+<meta property="article:published_time" content="2025-03-03T13:58:12.000Z">
+<meta property="article:modified_time" content="2025-03-03T14:01:24.515Z">
+<meta property="article:author" content="Taylor">
+<meta property="article:tag" content="MSA">
+<meta property="article:tag" content="对比学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="f:/files/myBlog/images/1ff561b2894ddb418ae717d2b428e1d9.png">
+
+<link rel="canonical" href="http://example.com/2025/03/03/%E8%B0%83%E7%A0%94MSA%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>调研MSA中的方法（四）：对比学习 | Welcome Taylor</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/rss2.xml" title="Welcome Taylor" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Welcome Taylor</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/03/%E8%B0%83%E7%A0%94MSA%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Taylor">
+      <meta itemprop="description" content="I want auroras and sad prose.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome Taylor">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          调研MSA中的方法（四）：对比学习
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-03-03 21:58:12 / Modified: 22:01:24" itemprop="dateCreated datePublished" datetime="2025-03-03T21:58:12+08:00">2025-03-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Papers/" itemprop="url" rel="index"><span itemprop="name">Papers</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这一章介绍四篇MSA中经典的结合对比学习方法的文章，末尾附上这四章的小总结~本系列共四章：多视图、对抗学习、元学习、对比学习。</p>
+<span id="more"></span>
+
+
+
+<h4 id="4-对比学习"><a href="#4-对比学习" class="headerlink" title="4. 对比学习"></a>4. 对比学习</h4><h5 id="（1）ConFEDE-Contrastive-Feature-Decomposition-for-Multimodal-Sentiment-Analysis-ACL2023"><a href="#（1）ConFEDE-Contrastive-Feature-Decomposition-for-Multimodal-Sentiment-Analysis-ACL2023" class="headerlink" title="（1）ConFEDE: Contrastive Feature Decomposition for Multimodal Sentiment Analysis (ACL2023)"></a>（1）ConFEDE: Contrastive Feature Decomposition for Multimodal Sentiment Analysis (ACL2023)</h5><p>&#x3D;&#x3D;标签：&#x3D;&#x3D;特征分解，对比学习</p>
+<p>&#x3D;&#x3D;解决的问题：&#x3D;&#x3D;差异性unique和一致性common 信息对于整体情感的含义非常有必要，尤其是对于sarcasm任务，</p>
+<p>&#x3D;&#x3D;主要工作：&#x3D;&#x3D;将每个模态分解为一个相似性特征（similarity feature）和一个相异性特征（dissimilarity feature），并以文本的相似性特征为锚，建立所有分解特征之间的对比关系。</p>
+<p><img src="F:/files/myBlog/images/1ff561b2894ddb418ae717d2b428e1d9.png" alt="image-20240319221241287"></p>
+<p>如上图所示，文章的贡献是在中间的部分，利用不同的投影器将每个模态的初始特征（T , V , A）分解为相似性特征（$T_s, V_s, A_s$）和相异性特征 （$T_d, V_d, A_d$）。（每个投影器都由 layer normalization，带有 Tanh 激活函数的linear layer 以及 dropout layer 构成），然后，通过对比特征分解学习不断地更新这六个分解特征，并将其融合到 ConFEDE 模型中，利用多任务学习目标损失函数进行训练。Loss损失计算对应图下面的三个任务，具体如下所示：$\mathcal{L}<em>{\text {all }}&#x3D;\mathcal{L}</em>{\text {pred }}+\beta_{\text {uni }} \mathcal{L}<em>{\text {uni }}+\beta</em>{\mathrm{cl}} \mathcal{L}<em>{\mathrm{cl}}$。其中，$\mathcal{L}</em>{\text {pred }}$ 为多模态预测损失， $\mathcal{L}<em>{\text {uni }}$ 为单模态预测损失，  $\mathcal{L}</em>{\text {cl}}$ 为对比损失。</p>
+<p>① <strong>单模态预测损失：</strong>是将6 个分解的特征分别输入一个权重共享的 MLP 分类器，得到 6 个预测结果。<strong>相似性特征（$T_s, V_s, A_s$） 通过 MLP 映射来预测多模态标签  ，相异性特征（$T_d, V_d, A_d$）通过 MLP 映射来预测特定模态标签</strong> ，但是当特定模态标签没有的时候，例如MOSI与MOSEI数据集，相异性特征（$T_d, V_d, A_d$）也被用来预测多模态标签。这样做的原因是，<strong>让相似性特征（$T_s, V_s, A_s$）通过样本的整体多模态标签捕获不同模态之间共享的一致信息，让相异性特征（$T_d, V_d, A_d$）保留由单模态标签表示的特定模态信息。</strong></p>
+<p>② <strong>对比损失：</strong>在一个简单的联合对比损失中进行对比：相似样本与相异样本进行对比（inter-sample）；同一样本相似特征与相异特征（intra-sample）进行对比。</p>
+<p><img src="F:/files/myBlog/images/image-20241011155522619.png" alt="image-20241011155522619"></p>
+<p>其中，(a,p), (a,k) 表示一对分解后的特征向量。$(a, p) \in \mathcal{P}^{i},(a, k) \in \mathcal{P}^{i} \text { or } \mathcal{N}^{i}$</p>
+<p>③ <strong>数据采样：</strong>根据多模态特征和多模态标签<strong>检索给定样本的相似样本，从而在样本间执行有监督的对比学习</strong>。对于 D 中的每个样本对( i , j )，计算它们之间的余弦相似度得分（内积）。然后，检索每个样本的候选相似&#x2F;相异样本集。对于每个样本 i ，根据相似度得分从高到低将具有相同多模态标签$y_m^i$的样本排序，作为候选相似样本集 $S_0^i$。将标签$y_m^i$ 以外的样本排序，作为候选相异样本集 $S_1^i$。</p>
+<p>从候选相似样本集$S_0^i$ 中随机选取两个余弦相似度得分较高的近似样本，与样本 i构成样本间正对，记为$\text{Neighbor}^i$；从候选相异样本集 $S_1^i$中随机选取四个不同的样本组成样本间负对，记为$\text{Outlier}^i$（其中两个样本具有较低的余弦相似度分数$$\text{Outlier}^i_1$$ ，另外两个样本具有较高的余弦相似度分数$$\text{Outlier}^i_2$$）。</p>
+<p><strong>为什么这样选择？</strong>通常倾向于选择$\text{Neighbor}^i$与$$\text{Outlier}^i_1$$ 中的样本分别与样本 i 形成正对和负对。但是由于$\text{Outlier}^i_2$中的样本与样本 i  具有不同的标签，并且具有相似的语义信息，所以$\text{Outlier}^i_2$中的样本很难与样本 i 区分开。故，将$\text{Outlier}^i_2$中的样本也添加到$\text{Outlier}^i$中。通过对比学习让$\text{Outlier}^i_2$中的样本与样本 i 区分开。</p>
+<p>④<strong>样本内intra-sample的正对&#x2F;负对构建：</strong>使用六个分解特征形成样本内的正&#x2F;负对。选择文本相似性特征 $T_s^i$ 作为锚点，使视觉和听觉相似性特征 $A_s^i$ 与 $V_s^i$ 向 $T_s^i$ 靠拢，同时将所有模态中的相异性特征 $T_d^i$ , $V_d^i$ , $A_d^i$ 远离  $T_s^i$ 。</p>
+<p><img src="F:/files/myBlog/images/image-20241011161442040.png" alt="image-20241011161442040"></p>
+<p>注意：$\text{Neighbor}^i$与$\text{Outlier}^i$ 分别代表样本 i 的相似样本和相异样本，$$<br>j \in \text { Neighbor }^i \cup \text { Outlier }^i<br>$$所起的作用是扩大对比范围。</p>
+<p>⑤<strong>样本间inter-sample的正对&#x2F;负对构建：</strong>根据数据采样器采样得到的$\text{Neighbor}^i$与$\text{Outlier}^i$ 构建样本间的正对&#x2F;负对。</p>
+<p><img src="F:/files/myBlog/images/image-20241011162146497.png" alt="image-20241011162146497"></p>
+<p>注意：只使用相似性特征来获得样本间的配对，因为同一类别中相似性样本的相似性特征应该很接近，而不同类别中样本的相似性特征应该相距较远。</p>
+<p>&#x3D;&#x3D;可以改进的地方：&#x3D;&#x3D;在没有单模态标签的情况下，模型效果表现不好，因为在单模态预测任务中，是用多模态的标签监督学习，会起到干扰的作用</p>
+<p>&#x3D;&#x3D;任务：&#x3D;&#x3D;MSA</p>
+<p>&#x3D;&#x3D;数据集：&#x3D;&#x3D;CMU-MOSI，CMU-MOSEI，CH-SIMS（带有单模态标签）</p>
+<p>&#x3D;&#x3D;结果：&#x3D;&#x3D;MOSI和MOSEI 结果不是很高，SIMS还行</p>
+<p><img src="F:/files/myBlog/images/image-20241011162737378.png" alt="image-20241011162737378"></p>
+<p>&#x3D;&#x3D;代码：&#x3D;&#x3D;<a target="_blank" rel="noopener" href="https://github.com/XpastaX/ConFEDE">https://github.com/XpastaX/ConFEDE</a></p>
+<h5 id="（2）Multi-level-Contrastive-Learning-Hierarchical-Alleviation-of-Heterogeneity-in-Multimodal-Sentiment-Analysis（IEEE-Transactions-on-Affective-Computing-2024）"><a href="#（2）Multi-level-Contrastive-Learning-Hierarchical-Alleviation-of-Heterogeneity-in-Multimodal-Sentiment-Analysis（IEEE-Transactions-on-Affective-Computing-2024）" class="headerlink" title="（2）Multi-level Contrastive Learning: Hierarchical Alleviation of Heterogeneity in Multimodal Sentiment Analysis（IEEE Transactions on Affective Computing 2024）"></a>（2）Multi-level Contrastive Learning: Hierarchical Alleviation of Heterogeneity in Multimodal Sentiment Analysis（IEEE Transactions on Affective Computing 2024）</h5><p>&#x3D;&#x3D;标签：&#x3D;&#x3D;对比学习；多层级融合</p>
+<p>&#x3D;&#x3D;解决的问题：&#x3D;&#x3D;现有方法比较少考虑不同的模态特征存在<strong>异构性</strong>的问题，这会影响后续的融合过程。模态的异构性是由模态之间<strong>不同的特征分布和不同的表征空间</strong>导致的。比如现有的方法通过注意力来融合，但不考虑异构性问题的话，数据分布之间的不一致会导致不平均的注意力权重分配。异构性也来自于不同模态组合，比如双模态和单模态之间的信息差异。<strong>而对比学习可以解决异构性问题，因为它可以把不同模态的数据投射到同一特征空间。</strong></p>
+<p>&#x3D;&#x3D;主要工作：&#x3D;&#x3D;文章主要针对的点是异质性问题出现在模态融合的各个阶段：不同模态（文本、音频、视觉）的低层次特征表现（如纹理、语音音高，basic information）和高层次的语义特征（semantic information features）。所以在设计模型的时候<strong>把对比学习用在了三个阶段</strong>（渐进式融合，也是比较自然的想法），并且融合的过程也是分两步走。框架图如下，在first-level，second-level，third-level层都分别用到了对比学习。</p>
+<p><img src="F:/files/myBlog/images/image-20240928165118509-1728702396078-1728702401197.png" alt="image-20240928165118509"></p>
+<p>如框架图所示：</p>
+<ul>
+<li>第一层对比学习在多模态特征融合的早期阶段缓解了单模态之间的异质性。</li>
+</ul>
+<p><img src="F:/files/myBlog/images/image-20241012113714745.png" alt="image-20241012113714745"></p>
+<ul>
+<li>第二层对比学习减轻了单模态和融合模态之间的异质性。</li>
+</ul>
+<p><img src="F:/files/myBlog/images/image-20241012113921820.png" alt="image-20241012113921820"></p>
+<ul>
+<li>在第三层上，引入了张量卷积融合模块，该模块从融合的模态中提取高层语义特征，并通过对比学习在更高的特征层面缓解异构性。</li>
+</ul>
+<p><img src="F:/files/myBlog/images/image-20241012114140724.png" alt="image-20241012114140724"></p>
+<p>对于融合过程，文章提出<strong>多层卷积融合（MCF）</strong>的方法模拟连续融合过程，多层对比学习和MCF可以协同操作，产生最优的融合结果。对于MCF模块，文章是受<strong>张量融合网络（TFN）</strong>的启发，TFN通过使用张量的外积将不同模态的数据融合在一起，形成一个高维的张量表示，这个张量表示捕获了不同模态间的相互作用。但由于这个张量表示含有冗余信息，因此作者改进引入多层的张量卷积融合。顾名思义，卷积融合就是用了卷积的操作来融合。不同于TFN的单次外积，MCF会先生成一个多模态“图像”（通过外积生成），然后使用二维卷积进行特征提取。这种方法可以像处理图像一样，多角度提取融合模态中的高级特征，因此达到逐步减少冗余信息的目的。</p>
+<p>&#x3D;&#x3D;可以改进的地方：&#x3D;&#x3D;</p>
+<p>&#x3D;&#x3D;任务：&#x3D;&#x3D;MSA</p>
+<p>&#x3D;&#x3D;数据集：&#x3D;&#x3D;MOSI,MOSEI,SIMS</p>
+<p>&#x3D;&#x3D;结果：&#x3D;&#x3D;挺高的</p>
+<p><img src="F:/files/myBlog/images/image-20241012114225268.png" alt="image-20241012114225268"></p>
+<p><img src="F:/files/myBlog/images/image-20241012114240460.png" alt="image-20241012114240460"></p>
+<p>&#x3D;&#x3D;代码：&#x3D;&#x3D;<a target="_blank" rel="noopener" href="https://github.com/Zhudogsi/MCL-MCF">https://github.com/Zhudogsi/MCL-MCF</a></p>
+<h3 id="二、总结的问题（及对应的方法）"><a href="#二、总结的问题（及对应的方法）" class="headerlink" title="二、总结的问题（及对应的方法）"></a>二、总结的问题（及对应的方法）</h3><ol>
+<li>不同模态表示信息不匹配&#x2F;矛盾：①学习模态的差异性unique和一致性common information，特征分解（multi-view）；②meta-learning去学习单模态标签。（讽刺识别任务，图像是开心的表情，可是文本是伤感的，当模态信息有冲突，如何挖掘出背后作者的情绪是积极&#x2F;消极的，这个对应就是 low-shared information的情况。）</li>
+<li>异构性：减少分布差距。有mapping, translation, <strong>adversarial learning，对比学习</strong>方法。比如说对比学习方法，可以实现自监督，一是通过拉近同一样本不同模态（正样本）的距离，拉远不同样本不同模态（负样本）的距离，可以对齐不同模态的表示和拉大负样本间的差异性，从而学习到更加鲁棒的特征。二是可以使不同模态的数据投射到同一特征空间中，并在这个空间内保持模态间的紧密联系。这对于融合多模态特征、提高模态间的协同作用十分有帮助。</li>
+<li>data imbalance问题：研究人员开始使用生成对抗学习来生成符合原始数据分布的新样本。具体来说，先前的工作通过最小化生成器和判别器学习到的数据分布来生成新的样本。（Adversarial alignment and graph fusion via information bottleneck for multimodal emotion recognition in conversations–related work提到）</li>
+<li>自适应权重：主要用到元学习，该策略主要是通过一小部分带有单模态标签的手工标注数据来学习每个模态的权重，并动态调整这些权重以适应不同的情感表达。也就是说，对于每个sample，模型可以根据模态之间的差异性和模态缺失情况，自动调整不同模态的权重。比如说，当某个模态信息对情感预测贡献较大时，模型会为该模态分配更高的权重。</li>
+</ol>
+<h3 id="三、其他Tips"><a href="#三、其他Tips" class="headerlink" title="三、其他Tips"></a>三、其他Tips</h3><ol>
+<li>自适应</li>
+<li>分层次</li>
+<li>有监督和无监督</li>
+<li>翻译网络：用来在图像和文本模态之间进行信息转换。比如说，通过翻译网络将图像模态的信息转换为文本模态的表示。这个翻译网络的目标是捕捉模态间共享的情感信息，特别是在一种模态缺失的情况下，能够利用另一种模态的翻译表示来替代缺失模态的数据。</li>
+<li>学单模态标签：使用多模态标签来训练单模态信号可能会引入噪声，影响模型的性能。不同模态可能传达不同的情感方面，导致多模态样本中各模态之间的标签不一致，进一步加剧了噪声标签问题。</li>
+<li>对抗学习分阶段，或者是突出文本的重要性，或者是自适应模态的权重</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MSA/" rel="tag"># MSA</a>
+              <a href="/tags/%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/" rel="tag"># 对比学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/03/03/%E8%B0%83%E7%A0%94MSA%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%85%83%E5%AD%A6%E4%B9%A0/" rel="prev" title="调研MSA中的方法（三）：元学习">
+      <i class="fa fa-chevron-left"></i> 调研MSA中的方法（三）：元学习
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">4. 对比学习</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%881%EF%BC%89ConFEDE-Contrastive-Feature-Decomposition-for-Multimodal-Sentiment-Analysis-ACL2023"><span class="nav-number">1.1.</span> <span class="nav-text">（1）ConFEDE: Contrastive Feature Decomposition for Multimodal Sentiment Analysis (ACL2023)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%882%EF%BC%89Multi-level-Contrastive-Learning-Hierarchical-Alleviation-of-Heterogeneity-in-Multimodal-Sentiment-Analysis%EF%BC%88IEEE-Transactions-on-Affective-Computing-2024%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">（2）Multi-level Contrastive Learning: Hierarchical Alleviation of Heterogeneity in Multimodal Sentiment Analysis（IEEE Transactions on Affective Computing 2024）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%80%BB%E7%BB%93%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%88%E5%8F%8A%E5%AF%B9%E5%BA%94%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%89"><span class="nav-number"></span> <span class="nav-text">二、总结的问题（及对应的方法）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%85%B6%E4%BB%96Tips"><span class="nav-number"></span> <span class="nav-text">三、其他Tips</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Taylor"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Taylor</p>
+  <div class="site-description" itemprop="description">I want auroras and sad prose.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:hthuang0923@gmail.com" title="E-Mail → mailto:hthuang0923@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Taylor</span>
+</div>
+
+<div class="theme-info">
+  <!-- <div class="powered-by"></div> -->
+  <span class="post-count">The whole site has a total of 12.6k words</span>
+  <span class="separator">|</span>
+</div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">Total <span id="busuanzi_value_site_pv"></span> visits</span>
+    <!-- <span class="post-meta-divider">.</span> -->
+    <span class="separator">|</span>
+    <span id="busuanzi_container_site_uv">Total <span id="busuanzi_value_site_uv"></span> visitors</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 5000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
