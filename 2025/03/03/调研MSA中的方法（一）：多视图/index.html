@@ -27,23 +27,23 @@
 <meta property="og:site_name" content="Welcome Taylor">
 <meta property="og:description" content="这一章介绍四篇MSA中经典的结合多视图方法的文章~预告本系列共四章：多视图、对抗学习、元学习、对比学习。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="f:/files/myBlog/images/image-20241012150724734.png">
-<meta property="og:image" content="f:/files/myBlog/images/image-20241012150707918.png">
-<meta property="og:image" content="f:/files/myBlog/images/image-20241012150748519.png">
-<meta property="og:image" content="f:/files/myBlog/images/image-20241012151353797.png">
-<meta property="og:image" content="f:/files/myBlog/images/image-20241012151540576.png">
-<meta property="og:image" content="f:/files/myBlog/images/image-20241012151825928.png">
-<meta property="og:image" content="f:/files/myBlog/images/image-20240511225739028.png">
-<meta property="og:image" content="f:/files/myBlog/images/image-20241012152356165.png">
-<meta property="og:image" content="f:/files/myBlog/images/image-20241012152405408.png">
-<meta property="og:image" content="f:/files/myBlog/images/image-20241012163328960.png">
+<meta property="og:image" content="http://example.com/images/image-20241012150724734.png">
+<meta property="og:image" content="http://example.com/images/image-20241012150707918.png">
+<meta property="og:image" content="http://example.com/images/image-20241012150748519.png">
+<meta property="og:image" content="http://example.com/images/image-20241012151353797.png">
+<meta property="og:image" content="http://example.com/images/image-20241012151540576.png">
+<meta property="og:image" content="http://example.com/images/image-20241012151825928.png">
+<meta property="og:image" content="http://example.com/2025/03/03/%E8%B0%83%E7%A0%94MSA%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%A4%9A%E8%A7%86%E5%9B%BE/images/image-20240511225739028.png">
+<meta property="og:image" content="http://example.com/images/image-20241012152356165.png">
+<meta property="og:image" content="http://example.com/images/image-20241012152405408.png">
+<meta property="og:image" content="http://example.com/images/image-20241012163328960.png">
 <meta property="article:published_time" content="2025-03-03T13:43:06.000Z">
-<meta property="article:modified_time" content="2025-03-03T14:13:03.004Z">
+<meta property="article:modified_time" content="2025-04-14T06:30:35.876Z">
 <meta property="article:author" content="Taylor">
 <meta property="article:tag" content="MSA">
 <meta property="article:tag" content="多视图">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="f:/files/myBlog/images/image-20241012150724734.png">
+<meta name="twitter:image" content="http://example.com/images/image-20241012150724734.png">
 
 <link rel="canonical" href="http://example.com/2025/03/03/%E8%B0%83%E7%A0%94MSA%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%A4%9A%E8%A7%86%E5%9B%BE/">
 
@@ -226,10 +226,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2025-03-03 21:43:06 / Modified: 22:13:03" itemprop="dateCreated datePublished" datetime="2025-03-03T21:43:06+08:00">2025-03-03</time>
+              <time title="Created: 2025-03-03 21:43:06" itemprop="dateCreated datePublished" datetime="2025-03-03T21:43:06+08:00">2025-03-03</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-04-14 14:30:35" itemprop="dateModified" datetime="2025-04-14T14:30:35+08:00">2025-04-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -263,10 +269,10 @@
 <h4 id="1-multi-view"><a href="#1-multi-view" class="headerlink" title="1. multi-view"></a>1. multi-view</h4><h5 id="（1）FACTORIZED-CONTRASTIVE-LEARNING-Going-Beyond-Multi-view-Redundancy-NeurIPS-2023"><a href="#（1）FACTORIZED-CONTRASTIVE-LEARNING-Going-Beyond-Multi-view-Redundancy-NeurIPS-2023" class="headerlink" title="（1）FACTORIZED CONTRASTIVE LEARNING: Going Beyond Multi-view Redundancy (NeurIPS 2023)"></a>（1）FACTORIZED CONTRASTIVE LEARNING: Going Beyond Multi-view Redundancy (NeurIPS 2023)</h5><p>&#x3D;&#x3D;标签：&#x3D;&#x3D;对比学习，重视unique information，</p>
 <p>&#x3D;&#x3D;解决的问题：&#x3D;&#x3D;多视图学习有基础的假设“multi-view redundancy” ：模态之间贡献的信息都是与任务相关的。忽略了“多视图的非冗余和独特的信息可能是重要的”这种情况。</p>
 <p>&#x3D;&#x3D;主要工作：&#x3D;&#x3D;</p>
-<p><img src="F:/files/myBlog/images/image-20241012150724734.png" alt="image-20241012150724734"></p>
-<p><img src="F:/files/myBlog/images/image-20241012150707918.png" alt="image-20241012150707918"></p>
+<p><img src="/images/image-20241012150724734.png" alt="image-20241012150724734"></p>
+<p><img src="/images/image-20241012150707918.png" alt="image-20241012150707918"></p>
 <p>数据增强：</p>
-<p><img src="F:/files/myBlog/images/image-20241012150748519.png" alt="image-20241012150748519"></p>
+<p><img src="/images/image-20241012150748519.png" alt="image-20241012150748519"></p>
 <p>&#x3D;&#x3D;可以改进的地方：&#x3D;&#x3D;①可以使用更好的MI上下界来优化目标，具体参考一些文献；</p>
 <p>②目前的数据增强方法需要手动选择增强方式，以大致满足<strong>定义 4</strong> 中的要求。可以用其他方式替代：①<strong>自动生成数据增强</strong>：可以扩展 <strong>InfoMin</strong> 方法，使其能够自动生成数据增强策略，以更好地满足定义 4 的标准。这意味着，不再需要手动选择增强方法，而是可以通过算法自动决定哪些增强方式最有效。②利用未来的多模态生成模型。</p>
 <p>③可以衡量shared 或unique information哪个信息对任务来说更重要，然后可以给优化目标函数的项赋不一样的权重值。</p>
@@ -277,19 +283,19 @@
 <h5 id="（2）Gacs-Korner-Common-Information-Variational-Autoencoder-NeurIPS-2023"><a href="#（2）Gacs-Korner-Common-Information-Variational-Autoencoder-NeurIPS-2023" class="headerlink" title="（2）Gács-Körner Common Information Variational Autoencoder (NeurIPS 2023)"></a>（2）Gács-Körner Common Information Variational Autoencoder (NeurIPS 2023)</h5><p>&#x3D;&#x3D;标签：&#x3D;&#x3D;重视common information</p>
 <p>&#x3D;&#x3D;解决的问题：&#x3D;&#x3D;假设用 (A, B, C) 来构造两个变量 X 和 Y，使$$X &#x3D; f(A, C)$$，$$Y &#x3D; g(B, C)$$，并且 C 编码了 X 和 Y 之间的所有且仅有的互信息 $$I(X; Y)$$，没有办法求得从高维数据中编码的这个最大公因数C。</p>
 <p>&#x3D;&#x3D;主要工作：&#x3D;&#x3D;GK-VAE</p>
-<p><img src="F:/files/myBlog/images/image-20241012151353797.png" alt="image-20241012151353797"></p>
+<p><img src="/images/image-20241012151353797.png" alt="image-20241012151353797"></p>
 <p>&#x3D;&#x3D;可以改进的地方：&#x3D;&#x3D;</p>
 <p>&#x3D;&#x3D;任务：&#x3D;&#x3D;图像分类</p>
 <p>&#x3D;&#x3D;数据集：&#x3D;&#x3D;3dshapes，dsprites</p>
-<p><img src="F:/files/myBlog/images/image-20241012151540576.png" alt="image-20241012151540576"></p>
+<p><img src="/images/image-20241012151540576.png" alt="image-20241012151540576"></p>
 <p>&#x3D;&#x3D;结果：&#x3D;&#x3D;</p>
 <p>&#x3D;&#x3D;代码：&#x3D;&#x3D;<a target="_blank" rel="noopener" href="https://github.com/mjkleinman/common-vae">https://github.com/mjkleinman/common-vae</a></p>
 <h5 id="（3）MISA-Modality-Invariant-and-Specific-Representations-for-Multimodal-Sentiment-Analysis-ACM-MM2020"><a href="#（3）MISA-Modality-Invariant-and-Specific-Representations-for-Multimodal-Sentiment-Analysis-ACM-MM2020" class="headerlink" title="（3）MISA: Modality-Invariant and -Specific Representations for Multimodal Sentiment Analysis (ACM MM2020)"></a>（3）MISA: Modality-Invariant and -Specific Representations for Multimodal Sentiment Analysis (ACM MM2020)</h5><p>&#x3D;&#x3D;标签：&#x3D;&#x3D;重视common和unique information</p>
 <p>&#x3D;&#x3D;解决的问题：&#x3D;&#x3D;异构性导致的distributional modality gaps</p>
 <p>&#x3D;&#x3D;主要工作：&#x3D;&#x3D;文章主要focus在如何有效地学习模态表示上，核心idea是将每个模态映射到两个不同的子 空间（factorized representations）。在第一个子空间中，学习模态间的共同信息（commonalities &#x2F;  common information）来减少模态间的差异。在第二个子空间中，学习每个模态私有的、特有的信 息。</p>
-<p><img src="F:/files/myBlog/images/image-20241012151825928.png" alt="image-20241012151825928"></p>
+<p><img src="/images/image-20241012151825928.png" alt="image-20241012151825928"></p>
 <p>主要用了四个loss来学习模态表示：相似度通过内积计算</p>
-<img src="F:/files/myBlog/images/image-20240511225739028.png" alt="image-20240511225739028" style="zoom:80%;" />
+<img src="images/image-20240511225739028.png" alt="image-20240511225739028" style="zoom:80%;" />
 
 <p>结合框架图来看，不同的loss起着各自的作用：</p>
 <ul>
@@ -302,8 +308,8 @@
 <p>&#x3D;&#x3D;任务：&#x3D;&#x3D;MSA，sarcasm</p>
 <p>&#x3D;&#x3D;数据集：&#x3D;&#x3D;MOSI，MOSEI，FUNNY</p>
 <p>&#x3D;&#x3D;结果：&#x3D;&#x3D;很一般</p>
-<p><img src="F:/files/myBlog/images/image-20241012152356165.png" alt="image-20241012152356165"></p>
-<p><img src="F:/files/myBlog/images/image-20241012152405408.png" alt="image-20241012152405408"></p>
+<p><img src="/images/image-20241012152356165.png" alt="image-20241012152356165"></p>
+<p><img src="/images/image-20241012152405408.png" alt="image-20241012152405408"></p>
 <p>&#x3D;&#x3D;代码：&#x3D;&#x3D;<a target="_blank" rel="noopener" href="https://github.com/declare-lab/MISA">https://github.com/declare-lab/MISA</a></p>
 <h5 id="（4）Multi-View-Interactive-Representations-for-Multimodal-Sentiment-Analysis-IEEE-TRANSACTIONS-ON-CONSUMER-ELECTRONICS-2024"><a href="#（4）Multi-View-Interactive-Representations-for-Multimodal-Sentiment-Analysis-IEEE-TRANSACTIONS-ON-CONSUMER-ELECTRONICS-2024" class="headerlink" title="（4）Multi-View Interactive Representations for Multimodal Sentiment Analysis (IEEE TRANSACTIONS ON CONSUMER ELECTRONICS 2024)"></a>（4）Multi-View Interactive Representations for Multimodal Sentiment Analysis (IEEE TRANSACTIONS ON CONSUMER ELECTRONICS 2024)</h5><p>&#x3D;&#x3D;标签：&#x3D;&#x3D;自监督标签生成</p>
 <p>&#x3D;&#x3D;解决的问题：&#x3D;&#x3D;现有的多模态情感分析方法在捕捉不同交互状态下的多视角情感线索方面存在不足，导致多模态表示的表达能力受限。本文提出了一个新框架（MVIR），通过在多种交互状态下学习共享和私有的情感信息，增强了情感分析的表现。</p>
@@ -314,7 +320,7 @@
 <p>&#x3D;&#x3D;任务：&#x3D;&#x3D;MSA</p>
 <p>&#x3D;&#x3D;数据集：&#x3D;&#x3D;MOSI, MOSEI, SIMS</p>
 <p>&#x3D;&#x3D;结果：&#x3D;&#x3D;一般</p>
-<p><img src="F:/files/myBlog/images/image-20241012163328960.png" alt="image-20241012163328960"></p>
+<p><img src="/images/image-20241012163328960.png" alt="image-20241012163328960"></p>
 <p>&#x3D;&#x3D;代码：&#x3D;&#x3D;无</p>
 
     </div>
